@@ -29,9 +29,40 @@ namespace PEngine
 
     public struct Card
     {
-        public CardSymbol Symbol { get; set; }
+        public Card(CardSymbol symbol, CardSuit suit)
+        {
+            _symbol = symbol;
 
-        public CardSuit Suit { get; set; }
+            _suit = suit;
+
+            _toString = String.Format("{0}-{1}", SymbolToString(_symbol), _suit);
+
+            _hashCode = typeof(Card).GetHashCode() * 1000 + (Int32)_symbol * 10 + (Int32)_suit;
+        }
+
+        private readonly String _toString;
+
+        private readonly CardSymbol _symbol;
+
+        private readonly CardSuit _suit;
+
+        private readonly Int32 _hashCode;
+
+        public CardSymbol Symbol
+        {
+            get
+            {
+                return _symbol;
+            }
+        }
+
+        public CardSuit Suit
+        {
+            get
+            {
+                return _suit;
+            }
+        }
 
         private static String SymbolToString(CardSymbol symbol)
         {
@@ -63,7 +94,31 @@ namespace PEngine
 
         public override String ToString()
         {
-            return String.Format("{0}-{1}", SymbolToString(Symbol), Suit);
+            return _toString;
+        }
+
+        public override Boolean Equals(Object obj)
+        {
+            if (null == obj)
+            {
+                return false;
+            }
+
+            if (obj is Card)
+            {
+                Card other = (Card)obj;
+
+                return other._symbol == _symbol && other._suit == _suit;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return _hashCode;
         }
     }
 }
