@@ -21,11 +21,7 @@ namespace PEngine
 
             var r = from s in suits
                     from v in symbols
-                    select new Card
-                    {
-                        Suit = (CardSuit)Enum.Parse(typeof(CardSuit), s),
-                        Symbol = (CardSymbol)Enum.Parse(typeof(CardSymbol), v)
-                    };
+                    select new Card((CardSymbol)Enum.Parse(typeof(CardSymbol), v), (CardSuit)Enum.Parse(typeof(CardSuit), s));
 
             return r.ToList();
         }
