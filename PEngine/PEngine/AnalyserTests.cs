@@ -85,184 +85,73 @@ namespace PEngine
             Assert.AreEqual(CardsAnalyser.HandRank.Straight, result.Rank);
         }
 
-        //[TestMethod]
-        //public void TestFlushVsTwoPairs()
-        //{
-        //    CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
-        //        {
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Clubs,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Clubs,
-        //                Symbol = CardSymbol.Three
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Three
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Queen
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Ten
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Jack
-        //            }
-        //        });
+        [TestMethod]
+        public void TestFlushVsTwoPairs()
+        {
+            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+                {
+                    new Card(CardSymbol.Two, CardSuit.Clubs),
+                    new Card(CardSymbol.Two, CardSuit.Heart),
+                    new Card(CardSymbol.Three, CardSuit.Clubs),
+                    new Card(CardSymbol.Three, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Ten, CardSuit.Heart),
+                    new Card(CardSymbol.Jack, CardSuit.Heart)
+                });
 
-        //    Assert.AreEqual(CardsAnalyser.HandRank.Flush, result.Rank);
-        //}
+            Assert.AreEqual(CardsAnalyser.HandRank.Flush, result.Rank);
+        }
 
-        //[TestMethod]
-        //public void TestFlushVsThree()
-        //{
-        //    CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
-        //        {
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Clubs,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Diamond,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Three
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Queen
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Ten
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Jack
-        //            }
-        //        });
+        [TestMethod]
+        public void TestFlushVsThree()
+        {
+            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+                {
+                    new Card(CardSymbol.Two, CardSuit.Clubs),
+                    new Card(CardSymbol.Two, CardSuit.Heart),
+                    new Card(CardSymbol.Two, CardSuit.Diamond),
+                    new Card(CardSymbol.Three, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Ten, CardSuit.Heart),
+                    new Card(CardSymbol.Jack, CardSuit.Heart)
+                });
 
-        //    Assert.AreEqual(CardsAnalyser.HandRank.Flush, result.Rank);
-        //}
+            Assert.AreEqual(CardsAnalyser.HandRank.Flush, result.Rank);
+        }
 
-        //[TestMethod]
-        //public void TestFourVsFull()
-        //{
-        //    CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
-        //        {
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Clubs,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Diamond,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Spades,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Queen
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Diamond,
-        //                Symbol = CardSymbol.Queen
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Spades,
-        //                Symbol = CardSymbol.Queen
-        //            }
-        //        });
+        [TestMethod]
+        public void TestFourVsFull()
+        {
+            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+                {
+                    new Card(CardSymbol.Two, CardSuit.Clubs),
+                    new Card(CardSymbol.Two, CardSuit.Heart),
+                    new Card(CardSymbol.Two, CardSuit.Diamond),
+                    new Card(CardSymbol.Two, CardSuit.Spades),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Diamond),
+                    new Card(CardSymbol.Queen, CardSuit.Spades)
+                });
 
-        //    Assert.AreEqual(CardsAnalyser.HandRank.FourOfKind, result.Rank);
-        //}
+            Assert.AreEqual(CardsAnalyser.HandRank.FourOfKind, result.Rank);
+        }
 
-        //[TestMethod]
-        //public void TestFull()
-        //{
-        //    CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
-        //        {
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Clubs,
-        //                Symbol = CardSymbol.Ace
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Diamond,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Spades,
-        //                Symbol = CardSymbol.Two
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Heart,
-        //                Symbol = CardSymbol.Queen
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Diamond,
-        //                Symbol = CardSymbol.Queen
-        //            },
-        //            new Card
-        //            {
-        //                Suit = CardSuit.Spades,
-        //                Symbol = CardSymbol.Queen
-        //            }
-        //        });
+        [TestMethod]
+        public void TestFull()
+        {
+            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+                {
+                    new Card(CardSymbol.Ace, CardSuit.Clubs),
+                    new Card(CardSymbol.Two, CardSuit.Heart),
+                    new Card(CardSymbol.Two, CardSuit.Diamond),
+                    new Card(CardSymbol.Two, CardSuit.Spades),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Diamond),
+                    new Card(CardSymbol.Queen, CardSuit.Spades)
 
-        //    Assert.AreEqual(CardsAnalyser.HandRank.FullHouse, result.Rank);
-        //}
+                });
+
+            Assert.AreEqual(CardsAnalyser.HandRank.FullHouse, result.Rank);
+        }
     }
 }
