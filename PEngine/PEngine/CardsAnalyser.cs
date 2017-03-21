@@ -345,13 +345,20 @@ namespace PEngine
 
         private static readonly Card[] EmptyCardsArray = new Card[0];
 
-        private static Card[] PrepareResidualCards(IEnumerable<Card> inputCards, List<Card> mainHandCards)
+        private static Card[] PrepareResidualCards(Card[] inputCards, List<Card> mainHandCards)
         {
             Int32 cardsToChoose = HandCardsCount - mainHandCards.Count;
+
+            Int32 cardsLeft = inputCards.Length - mainHandCards.Count;
 
             if (cardsToChoose < 0)
             {
                 throw new ApplicationException(String.Format("Invalid main hand cards count {0}", mainHandCards.Count));
+            }
+
+            if (cardsLeft <= 0)
+            {
+                return EmptyCardsArray;
             }
 
             if (cardsToChoose == 0)
