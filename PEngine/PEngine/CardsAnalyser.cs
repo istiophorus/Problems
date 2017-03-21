@@ -70,15 +70,6 @@ namespace PEngine
 
             HandRank currentHand = HandRank.HighCard;
 
-            if (flushCards != null && flushCards.Count >= HandCardsCount)
-            {
-                currentHand = HandRank.Flush;
-            }
-
-            Int32 pairs = 0;
-
-            Int32 threes = 0;
-
             List<Int32> currentCardsSequence = new List<Int32>(7);
 
             List<Int32> longestCardsSequence = new List<Int32>(7);
@@ -179,8 +170,6 @@ namespace PEngine
                     }
                     else if (current == 3)
                     {
-                        threes++;
-
                         threesList.Add(q);
 
                         if (q > highestThree)
@@ -190,8 +179,6 @@ namespace PEngine
                     }
                     else if (current == 2)
                     {
-                        pairs++;
-
                         pairsList.Add(q);
 
                         if (q > highestTwo)
@@ -199,6 +186,37 @@ namespace PEngine
                             highestTwo = q;
                         }
                     }
+                }
+            }
+
+            Tuple<HandRank, List<Card>> selectedHandCardsAndRand = PrepareSelectedCardsAndRand(currentHand, cardsMap, flushCards, longestCardsSequence, fours, highestThree, highestFour, highestTwo, pairsList, threesList, selectedLongestSuitedSequence);
+
+            return new Result
+                {
+                    Rank = selectedHandCardsAndRand.Item1,
+                    MainHandCards = selectedHandCardsAndRand.Item2.ToArray(),
+                    ResidualCards = PrepareResidualCards(cards, selectedHandCardsAndRand.Item2)
+                };
+        }
+
+        private static Tuple<HandRank, List<Card>> PrepareSelectedCardsAndRand(
+            HandRank currentHand,
+            CardsMap cardsMap, 
+            List<Card> flushCards, 
+            List<int> longestCardsSequence, 
+            int fours, 
+            int highestThree, 
+            int highestFour, 
+            int highestTwo, 
+            List<Int32> pairsList, 
+            List<Int32> threesList, 
+            List<Card> selectedLongestSuitedSequence)
+        {
+            if (flushCards != null && flushCards.Count >= HandCardsCount)
+            {
+                if (currentHand < HandRank.Flush)
+                {
+                    currentHand = HandRank.Flush;
                 }
             }
 
@@ -217,7 +235,7 @@ namespace PEngine
             }
             else
             {
-                if (threes == 1 && pairs >= 1)
+                if (threesList.Count == 1 && pairsList.Count >= 1)
                 {
                     if (currentHand < HandRank.FullHouse)
                     {
@@ -230,7 +248,7 @@ namespace PEngine
                         selectedHandCards.AddRange(cardsMap.Get(highestTwo));
                     }
                 }
-                else if (threes >= 2)
+                else if (threesList.Count >= 2)
                 {
                     if (currentHand < HandRank.FullHouse)
                     {
@@ -247,7 +265,7 @@ namespace PEngine
                 }
             }
 
-            if (threes >= 1)
+            if (threesList.Count >= 1)
             {
                 if (currentHand < HandRank.ThreeOfkind)
                 {
@@ -259,7 +277,7 @@ namespace PEngine
                 }
             }
 
-            if (pairs >= 2)
+            if (pairsList.Count >= 2)
             {
                 if (currentHand < HandRank.TwoPairs)
                 {
@@ -275,7 +293,7 @@ namespace PEngine
                 }
             }
 
-            if (pairs == 1)
+            if (pairsList.Count == 1)
             {
                 if (currentHand < HandRank.Pair)
                 {
@@ -321,12 +339,7 @@ namespace PEngine
                 selectedHandCards.AddRange(flushCards);
             }
 
-            return new Result
-                {
-                    Rank = currentHand,
-                    MainHandCards = selectedHandCards.ToArray(),
-                    ResidualCards = PrepareResidualCards(cards, selectedHandCards)
-            };
+            return new Tuple<HandRank, List<Card>>(currentHand, selectedHandCards);
         }
 
         private static List<T> EnsureNotMoreThen<T>(List<T> input, Int32 count)
