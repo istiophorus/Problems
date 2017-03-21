@@ -9,7 +9,7 @@ namespace PEngine
         [TestMethod]
         public void TestPair1()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Jack, CardSuit.Clubs),
                     new Card (CardSymbol.Jack, CardSuit.Diamond)
@@ -21,7 +21,7 @@ namespace PEngine
         [TestMethod]
         public void TestPair2()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Jack, CardSuit.Clubs),
                     new Card(CardSymbol.Ace, CardSuit.Heart),
@@ -53,7 +53,7 @@ namespace PEngine
         [TestMethod]
         public void TestTwoPairs1()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Jack, CardSuit.Clubs),
                     new Card(CardSymbol.Ace, CardSuit.Heart),
@@ -72,7 +72,7 @@ namespace PEngine
         [TestMethod]
         public void TestStraight2()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Jack, CardSuit.Clubs),
                     new Card(CardSymbol.Ace, CardSuit.Heart),
@@ -91,7 +91,7 @@ namespace PEngine
         [TestMethod]
         public void TestStraightVsThree()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Jack, CardSuit.Clubs),
                     new Card(CardSymbol.Ace, CardSuit.Heart),
@@ -110,7 +110,7 @@ namespace PEngine
         [TestMethod]
         public void TestFlushVsTwoPairs()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Two, CardSuit.Clubs),
                     new Card(CardSymbol.Two, CardSuit.Heart),
@@ -129,7 +129,7 @@ namespace PEngine
         [TestMethod]
         public void TestFlushVsThree()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Two, CardSuit.Clubs),
                     new Card(CardSymbol.Two, CardSuit.Heart),
@@ -148,7 +148,7 @@ namespace PEngine
         [TestMethod]
         public void TestFourVsFull()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Two, CardSuit.Clubs),
                     new Card(CardSymbol.Two, CardSuit.Heart),
@@ -167,7 +167,7 @@ namespace PEngine
         [TestMethod]
         public void TestFull()
         {
-            CardsAnalyser.Result result = CardsAnalyser.Analyse(new[]
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Ace, CardSuit.Clubs),
                     new Card(CardSymbol.Two, CardSuit.Heart),

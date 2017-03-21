@@ -42,7 +42,7 @@ namespace PEngine
 
                     cc.AddRange(playerCards[q]);
 
-                    CardsAnalyser.Result result = CardsAnalyser.Analyse(cc.ToArray());
+                    CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(cc.ToArray());
 
                     //Console.WriteLine(result.Rank);
 

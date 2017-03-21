@@ -58,7 +58,10 @@ namespace PEngine
             return new Card(SymbolsIndexed[symbolIndex], SuitsIndexed[suitIndex]);
         }
 
-        public static Result Analyse(Card[] cards)
+        public static void CompareResults()
+        { }
+
+        public static Result AnalyseCards(Card[] cards)
         {
             Int32[][] cardsBitMap = new Int32[4][] { new Int32[13], new Int32[13], new Int32[13], new Int32[13] };
 
