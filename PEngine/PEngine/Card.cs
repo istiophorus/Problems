@@ -27,7 +27,7 @@ namespace PEngine
         Heart = 4
     }
 
-    public struct Card
+    public struct Card : IComparable<Card>
     {
         public Card(CardSymbol symbol, CardSuit suit)
         {
@@ -119,6 +119,11 @@ namespace PEngine
         public override Int32 GetHashCode()
         {
             return _hashCode;
+        }
+
+        public Int32 CompareTo(Card other)
+        {
+            return Symbol.CompareTo(other.Symbol);
         }
     }
 }

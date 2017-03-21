@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace PEngine
 {
@@ -32,6 +33,21 @@ namespace PEngine
                 });
 
             Assert.AreEqual(CardsAnalyser.HandRank.Pair, result.Rank);
+
+            CheckResult(result, 2, 3);
+        }
+
+        private static void CheckResult(CardsAnalyser.Result result, Int32 expectedMain, Int32 expectedResidual)
+        {
+            Assert.IsNotNull(result.MainHandCards);
+
+            Assert.IsNotNull(result.ResidualCards);
+
+            Assert.AreEqual(CardsAnalyser.HandCardsCount, result.MainHandCards.Length + result.ResidualCards.Length);
+
+            Assert.AreEqual(expectedMain, result.MainHandCards.Length);
+
+            Assert.AreEqual(expectedResidual, result.ResidualCards.Length);
         }
 
         [TestMethod]
@@ -49,6 +65,8 @@ namespace PEngine
                 });
 
             Assert.AreEqual(CardsAnalyser.HandRank.TwoPairs, result.Rank);
+
+            CheckResult(result, 4, 1);
         }
 
         [TestMethod]
@@ -66,6 +84,8 @@ namespace PEngine
                 });
 
             Assert.AreEqual(CardsAnalyser.HandRank.Straight, result.Rank);
+
+            CheckResult(result, 5, 0);
         }
 
         [TestMethod]
@@ -83,6 +103,8 @@ namespace PEngine
                 });
 
             Assert.AreEqual(CardsAnalyser.HandRank.Straight, result.Rank);
+
+            CheckResult(result, 5, 0);
         }
 
         [TestMethod]
@@ -100,6 +122,8 @@ namespace PEngine
                 });
 
             Assert.AreEqual(CardsAnalyser.HandRank.Flush, result.Rank);
+
+            CheckResult(result, 5, 0);
         }
 
         [TestMethod]
@@ -117,6 +141,8 @@ namespace PEngine
                 });
 
             Assert.AreEqual(CardsAnalyser.HandRank.Flush, result.Rank);
+
+            CheckResult(result, 5, 0);
         }
 
         [TestMethod]
@@ -134,6 +160,8 @@ namespace PEngine
                 });
 
             Assert.AreEqual(CardsAnalyser.HandRank.FourOfKind, result.Rank);
+
+            CheckResult(result, 4, 1);
         }
 
         [TestMethod]
@@ -152,6 +180,8 @@ namespace PEngine
                 });
 
             Assert.AreEqual(CardsAnalyser.HandRank.FullHouse, result.Rank);
+
+            CheckResult(result, 5, 0);
         }
     }
 }

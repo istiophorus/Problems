@@ -23,7 +23,9 @@ namespace PEngine
         {
             public HandRank Rank { get; set; }
 
-            public Card[] SelectedCards { get; set; }
+            public Card[] MainHandCards { get; set; }
+
+            public Card[] ResidualCards { get; set; }
         }
 
         private static readonly CardSuit[] SuitsIndexed = new CardSuit[]
@@ -64,11 +66,14 @@ namespace PEngine
 
             CardsMap cardsMap = new CardsMap();
 
-            Int32[] suitsCounters = new Int32[4];
-
-            Boolean isFlush = CountCardsAndPrepareMaps(cards, cardsBitMap, counters, cardsMap, suitsCounters);
+            List<Card> flushCards = CountCardsAndPrepareMaps(cards, cardsBitMap, counters, cardsMap);
 
             HandRank currentHand = HandRank.HighCard;
+
+            if (flushCards != null && flushCards.Count >= HandCardsCount)
+            {
+                currentHand = HandRank.Flush;
+            }
 
             Int32 pairs = 0;
 
@@ -95,12 +100,6 @@ namespace PEngine
                 };
 
             Int32 fours = 0;
-
-            if (isFlush)
-            {
-                currentHand = HandRank.Flush;
-            }
-
             Int32 highestThree = -1;
             Int32 highestFour = -1;
             Int32 highestTwo = -1;
@@ -294,10 +293,7 @@ namespace PEngine
                 {
                     currentHand = HandRank.Straight;
 
-                    while (longestCardsSequence.Count > 5)
-                    {
-                        longestCardsSequence.RemoveAt(0);
-                    }
+                    EnsureNotMoreThen(longestCardsSequence, HandCardsCount);
 
                     selectedHandCards.Clear();
 
@@ -308,31 +304,85 @@ namespace PEngine
             if (currentHand == HandRank.RoyalFLush ||
                 currentHand == HandRank.StraightFlush)
             {
-                if (selectedLongestSuitedSequence.Count >= 5)
+                if (selectedLongestSuitedSequence.Count >= HandCardsCount)
                 {
                     selectedHandCards.Clear();
 
-                    selectedLongestSuitedSequence.Sort();
-
-                    while (selectedLongestSuitedSequence.Count > 5)
-                    {
-                        selectedLongestSuitedSequence.RemoveAt(0);
-                    }
+                    EnsureNotMoreThen(selectedLongestSuitedSequence, HandCardsCount);
 
                     selectedHandCards.AddRange(selectedLongestSuitedSequence);
                 }
             }
 
+            if (currentHand == HandRank.Flush)
+            {
+                selectedHandCards.Clear();
+
+                selectedHandCards.AddRange(flushCards);
+            }
+
             return new Result
                 {
                     Rank = currentHand,
-                    SelectedCards = selectedHandCards.ToArray()
-                };
+                    MainHandCards = selectedHandCards.ToArray(),
+                    ResidualCards = PrepareResidualCards(cards, selectedHandCards)
+            };
         }
 
-        private static Boolean CountCardsAndPrepareMaps(Card[] cards, Int32[][] cardsBitMap, Int32[] counters, CardsMap cardsMap, Int32[] suitsCounters)
+        private static List<T> EnsureNotMoreThen<T>(List<T> input, Int32 count)
         {
-            Boolean isFlush = false;
+            input.Sort();
+
+            while (input.Count > count)
+            {
+                input.RemoveAt(0);
+            }
+
+            return input;
+        }
+
+        public static readonly Int32 HandCardsCount = 5;
+
+        private static readonly Card[] EmptyCardsArray = new Card[0];
+
+        private static Card[] PrepareResidualCards(IEnumerable<Card> inputCards, List<Card> mainHandCards)
+        {
+            Int32 cardsToChoose = HandCardsCount - mainHandCards.Count;
+
+            if (cardsToChoose < 0)
+            {
+                throw new ApplicationException(String.Format("Invalid main hand cards count {0}", mainHandCards.Count));
+            }
+
+            if (cardsToChoose == 0)
+            {
+                return EmptyCardsArray;
+            }
+
+            List<Card> result = new List<Card>(inputCards);
+
+            mainHandCards.ForEach(card => result.Remove(card));
+
+            EnsureNotMoreThen(result, cardsToChoose);
+
+            //// it should be sorted ascending tehrefore we have to change the order
+
+            result.Reverse();
+
+            return result.ToArray();
+        }
+
+        private static List<Card> CountCardsAndPrepareMaps(Card[] cards, Int32[][] cardsBitMap, Int32[] counters, CardsMap cardsMap)
+        {
+            List<Card>[] suitedLists = new[]
+            {
+                new List<Card>(7),
+                new List<Card>(7),
+                new List<Card>(7),
+                new List<Card>(7)
+            };
+
+            List<Card> result = null;
 
             for (Int32 q = 0; q < cards.Length; q++)
             {
@@ -346,17 +396,22 @@ namespace PEngine
 
                 cardsBitMap[suitIndex][index] = 1;
 
-                suitsCounters[suitIndex]++;
+                suitedLists[suitIndex].Add(card);
 
-                if (suitsCounters[suitIndex] >= 5)
+                if (suitedLists[suitIndex].Count >= HandCardsCount)
                 {
-                    isFlush = true;
+                    result = suitedLists[suitIndex];
                 }
 
                 cardsMap.Add(index, card);
             }
 
-            return isFlush;
+            if (null != result)
+            {
+                EnsureNotMoreThen(result, HandCardsCount);
+            }
+
+            return result;
         }
     }
 }
