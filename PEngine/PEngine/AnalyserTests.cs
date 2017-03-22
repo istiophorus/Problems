@@ -24,7 +24,7 @@ namespace PEngine
             CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
                 {
                     new Card(CardSymbol.Jack, CardSuit.Clubs),
-                    new Card(CardSymbol.Ace, CardSuit.Heart),
+                    new Card(CardSymbol.Eight, CardSuit.Heart),
                     new Card(CardSymbol.Three, CardSuit.Clubs),
                     new Card(CardSymbol.King, CardSuit.Heart),
                     new Card(CardSymbol.Queen, CardSuit.Heart),
@@ -35,6 +35,12 @@ namespace PEngine
             Assert.AreEqual(CardsAnalyser.HandRank.Pair, result.Rank);
 
             CheckResult(result, 2, 3);
+
+            Assert.AreEqual(Card.CreateInstance(CardSymbol.King, CardSuit.Heart), result.ResidualCards[0]);
+
+            Assert.AreEqual(Card.CreateInstance(CardSymbol.Queen, CardSuit.Heart), result.ResidualCards[1]);
+
+            Assert.AreEqual(Card.CreateInstance(CardSymbol.Nine, CardSuit.Heart), result.ResidualCards[2]);
         }
 
         private static void CheckResult(CardsAnalyser.Result result, Int32 expectedMain, Int32 expectedResidual)
@@ -67,6 +73,8 @@ namespace PEngine
             Assert.AreEqual(CardsAnalyser.HandRank.TwoPairs, result.Rank);
 
             CheckResult(result, 4, 1);
+
+            Assert.AreEqual(Card.CreateInstance(CardSymbol.Ace, CardSuit.Heart), result.ResidualCards[0]);
         }
 
         [TestMethod]

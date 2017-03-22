@@ -29,6 +29,11 @@ namespace PEngine
 
     public struct Card : IComparable<Card>
     {
+        public static Card CreateInstance(CardSymbol symbol, CardSuit suit)
+        {
+            return new Card(symbol, suit);
+        }
+
         public Card(CardSymbol symbol, CardSuit suit)
         {
             _symbol = symbol;
