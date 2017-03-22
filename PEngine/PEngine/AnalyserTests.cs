@@ -7,6 +7,147 @@ namespace PEngine
     public sealed class AnalyserTests
     {
         [TestMethod]
+        public void ComparePairs()
+        {
+            CardsAnalyser.Result resultA = CardsAnalyser.AnalyseCards(new[]
+                {
+                    new Card(CardSymbol.Jack, CardSuit.Clubs),
+                    new Card(CardSymbol.Eight, CardSuit.Heart),
+                    new Card(CardSymbol.Three, CardSuit.Clubs),
+                    new Card(CardSymbol.King, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Nine, CardSuit.Heart),
+                    new Card(CardSymbol.Jack, CardSuit.Spades)
+                });
+
+            CardsAnalyser.Result resultB = CardsAnalyser.AnalyseCards(new[]
+                {
+                    new Card(CardSymbol.Jack, CardSuit.Clubs),
+                    new Card(CardSymbol.Eight, CardSuit.Heart),
+                    new Card(CardSymbol.Three, CardSuit.Clubs),
+                    new Card(CardSymbol.King, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Nine, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Spades)
+                });
+
+            Int32 comparisonResult = resultA.CompareTo(resultB);
+
+            Assert.AreEqual(-1, comparisonResult);
+        }
+
+        [TestMethod]
+        public void CompareSamePairs()
+        {
+            CommonMatchTest(new[]
+               {
+                    new Card(CardSymbol.Jack, CardSuit.Clubs),
+                    new Card(CardSymbol.Eight, CardSuit.Heart),
+                    new Card(CardSymbol.Three, CardSuit.Clubs),
+                    new Card(CardSymbol.King, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Six, CardSuit.Heart),
+                    new Card(CardSymbol.Jack, CardSuit.Spades)
+                },
+                CardsAnalyser.HandRank.Pair,
+                2,
+                3,
+                new[]
+                 {
+                    new Card(CardSymbol.Jack, CardSuit.Clubs),
+                    new Card(CardSymbol.Eight, CardSuit.Heart),
+                    new Card(CardSymbol.Three, CardSuit.Clubs),
+                    new Card(CardSymbol.King, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Nine, CardSuit.Heart),
+                    new Card(CardSymbol.Jack, CardSuit.Spades)
+                },
+                CardsAnalyser.HandRank.Pair,
+                2,
+                3,
+                -1);
+        }
+
+        [TestMethod]
+        public void HighCard()
+        {
+            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]
+                {
+                    new Card(CardSymbol.Jack, CardSuit.Clubs),
+                    new Card(CardSymbol.Eight, CardSuit.Heart),
+                    new Card(CardSymbol.Three, CardSuit.Clubs),
+                    new Card(CardSymbol.Five, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Nine, CardSuit.Heart),
+                    new Card(CardSymbol.Two, CardSuit.Spades)
+                });
+
+            Assert.AreEqual(CardsAnalyser.HandRank.HighCard, result.Rank);
+
+            CheckResult(result, 0, 5);
+        }
+
+        private static void CommonMatchTest(
+            Card[] cardsA,
+            CardsAnalyser.HandRank expectedRankA,
+            Int32 expectedMainA,
+            Int32 expectedResidualA,
+            Card[] cardsB,
+            CardsAnalyser.HandRank expectedRankB,
+            Int32 expectedMainB,
+            Int32 expectedResidualB,
+            Int32 expectedComparisonResult)
+        {
+            CardsAnalyser.Result resultA = CardsAnalyser.AnalyseCards(cardsA);
+
+            CardsAnalyser.Result resultB = CardsAnalyser.AnalyseCards(cardsB);
+
+            Assert.AreEqual(expectedRankA, resultA.Rank);
+
+            Assert.AreEqual(expectedRankB, resultB.Rank);
+
+            Int32 comparisonResult = resultA.CompareTo(resultB);
+
+            Assert.AreEqual(expectedComparisonResult, comparisonResult);
+
+            CheckResult(resultA, expectedMainA, expectedResidualA);
+
+            CheckResult(resultB, expectedMainB, expectedResidualB);
+        }
+
+        [TestMethod]
+        public void CompareHighCards()
+        {
+            CommonMatchTest(new[]
+                {
+                    new Card(CardSymbol.Jack, CardSuit.Clubs),
+                    new Card(CardSymbol.Eight, CardSuit.Heart),
+                    new Card(CardSymbol.Three, CardSuit.Clubs),
+                    new Card(CardSymbol.Five, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Nine, CardSuit.Heart),
+                    new Card(CardSymbol.Two, CardSuit.Spades)
+                },
+                CardsAnalyser.HandRank.HighCard,
+                0,
+                5,
+                new[]
+                {
+                    new Card(CardSymbol.Jack, CardSuit.Clubs),
+                    new Card(CardSymbol.Eight, CardSuit.Heart),
+                    new Card(CardSymbol.Three, CardSuit.Clubs),
+                    new Card(CardSymbol.Four, CardSuit.Heart),
+                    new Card(CardSymbol.Queen, CardSuit.Heart),
+                    new Card(CardSymbol.Nine, CardSuit.Heart),
+                    new Card(CardSymbol.Two, CardSuit.Spades)
+                },
+                CardsAnalyser.HandRank.HighCard,
+                0,
+                5,
+                1);
+        }
+
+        [TestMethod]
         public void TestPair1()
         {
             CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(new[]

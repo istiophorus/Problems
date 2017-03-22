@@ -19,13 +19,57 @@ namespace PEngine
             RoyalFLush
         }
 
-        public sealed class Result
+        public sealed class Result : IComparable<Result>
         {
             public HandRank Rank { get; set; }
 
             public Card[] MainHandCards { get; set; }
 
             public Card[] ResidualCards { get; set; }
+
+            public Int32 CompareTo(Result other)
+            {
+                if (null == other)
+                {
+                    throw new ArgumentNullException("other");
+                }
+
+                Result otherResult = other as Result;
+
+                if (null == otherResult)
+                {
+                    throw new InvalidCastException("other");
+                }
+
+                Int32 rankCompareResult = Rank.CompareTo(otherResult.Rank);
+
+                if (rankCompareResult != 0)
+                {
+                    return rankCompareResult;
+                }
+
+                for (Int32 q = 0, maxQ = MainHandCards.Length; q < maxQ; q++)
+                {
+                    Int32 cardCompareResult = MainHandCards[q].CompareTo(otherResult.MainHandCards[q]);
+
+                    if (cardCompareResult != 0)
+                    {
+                        return cardCompareResult;
+                    }
+                }
+
+                for (Int32 q = 0, maxQ = ResidualCards.Length; q < maxQ; q++)
+                {
+                    Int32 cardCompareResult = ResidualCards[q].CompareTo(otherResult.ResidualCards[q]);
+
+                    if (cardCompareResult != 0)
+                    {
+                        return cardCompareResult;
+                    }
+                }
+
+                return 0;
+            }
         }
 
         private static readonly CardSuit[] SuitsIndexed = new CardSuit[]

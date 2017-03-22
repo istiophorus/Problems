@@ -44,8 +44,6 @@ namespace PEngine
 
                     CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(cc.ToArray());
 
-                    //Console.WriteLine(result.Rank);
-
                     Int32 counter;
 
                     if (counters.TryGetValue(result.Rank, out counter))
