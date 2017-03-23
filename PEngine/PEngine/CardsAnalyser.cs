@@ -102,8 +102,34 @@ namespace PEngine
             return new Card(SymbolsIndexed[symbolIndex], SuitsIndexed[suitIndex]);
         }
 
-        public static void CompareResults()
-        { }
+        public static Result GetWinner(Result[] results)
+        {
+            if (results.Length == 0)
+            {
+                return null;
+            }
+
+            if (results.Length == 1)
+            {
+                return results[0];
+            }
+
+            Result result = results[0];
+
+            for (Int32 q = 1; q < results.Length; q++)
+            {
+                Result current = results[q];
+
+                Int32 compareResult = current.CompareTo(result);
+
+                if (compareResult > 0)
+                {
+                    result = current;
+                }
+            }
+
+            return result;
+        }
 
         public static Result AnalyseCards(Card[] cards)
         {

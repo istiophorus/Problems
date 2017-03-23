@@ -3,17 +3,35 @@ using System.Collections.Generic;
 
 namespace PEngine
 {
-    class Program
+    public static class Program
     {
+        private static void TryUpdateCounterOrAdd<T>(this Dictionary<T, Int32> countersMap, T item)
+        {
+            Int32 counter;
+
+            if (countersMap.TryGetValue(item, out counter))
+            {
+                countersMap[item] = counter + 1;
+            }
+            else
+            {
+                countersMap.Add(item, 1);
+            }
+        }
+
         static void Main(string[] args)
         {
-            Int32 players = 6;
+            Int32 players = 2;
 
             List<Card[]> playerCards = new List<Card[]>(players);
 
             Dictionary<CardsAnalyser.HandRank, Int32> counters = new Dictionary<CardsAnalyser.HandRank, Int32>();
 
             IRandom random = new MersenneTwister((UInt64)Environment.TickCount);
+
+            CardsAnalyser.Result[] singleMatchResults = new CardsAnalyser.Result[players];
+
+            Dictionary<CardsAnalyser.HandRank, Int32> winnersCounters = new Dictionary<CardsAnalyser.HandRank, Int32>();
 
             for (Int32 g = 0; g < 10000000; g++)
             {
@@ -44,17 +62,14 @@ namespace PEngine
 
                     CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(cc.ToArray());
 
-                    Int32 counter;
+                    counters.TryUpdateCounterOrAdd(result.Rank);
 
-                    if (counters.TryGetValue(result.Rank, out counter))
-                    {
-                        counters[result.Rank] = counter + 1;
-                    }
-                    else
-                    {
-                        counters.Add(result.Rank, 1);
-                    }
+                    singleMatchResults[q] = result;
                 }
+
+                CardsAnalyser.Result winner = CardsAnalyser.GetWinner(singleMatchResults);
+
+                winnersCounters.TryUpdateCounterOrAdd(winner.Rank);
             }
         }
     }
