@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace PEngine
 {
@@ -19,10 +20,8 @@ namespace PEngine
             }
         }
 
-        static void Main(string[] args)
+        private static Dictionary<CardsAnalyser.HandRank, Int32> Sim1(Int32 players, Int32 maxGames)
         {
-            Int32 players = 2;
-
             List<Card[]> playerCards = new List<Card[]>(players);
 
             Dictionary<CardsAnalyser.HandRank, Int32> counters = new Dictionary<CardsAnalyser.HandRank, Int32>();
@@ -33,7 +32,7 @@ namespace PEngine
 
             Dictionary<CardsAnalyser.HandRank, Int32> winnersCounters = new Dictionary<CardsAnalyser.HandRank, Int32>();
 
-            for (Int32 g = 0; g < 10000000; g++)
+            for (Int32 g = 0; g < maxGames; g++)
             {
                 DeckOfCards deckOfCards = new DeckOfCards();
 
@@ -71,6 +70,75 @@ namespace PEngine
 
                 winnersCounters.TryUpdateCounterOrAdd(winner.Rank);
             }
+
+            return winnersCounters;
+        }
+
+        private static void SimWrapper(Int32 maxGames)
+        {
+            Dictionary<Int32, Dictionary<CardsAnalyser.HandRank, Int32>> allResults = new Dictionary<Int32, Dictionary<CardsAnalyser.HandRank, Int32>>();
+
+            for (Int32 q = 2; q < 10; q++)
+            {
+                Console.WriteLine(q);
+
+                Dictionary<CardsAnalyser.HandRank, Int32> winnersCounters = Sim1(q, maxGames);
+
+                allResults.Add(q, winnersCounters);
+            }
+
+            PrintResults(allResults);
+        }
+
+        private static void PrintResults(Dictionary<Int32, Dictionary<CardsAnalyser.HandRank, Int32>> allResults)
+        {
+            Array items = PrintHeaders();
+
+            StringBuilder sb = new StringBuilder();
+
+            for (Int32 q = 2; q < 9; q++)
+            {
+                Dictionary<CardsAnalyser.HandRank, Int32> winnersCounters = allResults[q];
+
+                for (Int32 w = 0; w < items.Length; w++)
+                {
+                    CardsAnalyser.HandRank rank = (CardsAnalyser.HandRank)items.GetValue(w);
+
+                    Int32 value = 0;
+
+                    winnersCounters.TryGetValue(rank, out value);
+
+                    sb.Append(value).Append("\t");
+                }
+
+                Console.WriteLine(sb.ToString());
+
+                sb.Length = 0;
+            }
+        }
+
+        private static Array PrintHeaders()
+        {
+            Array items = Enum.GetValues(typeof(CardsAnalyser.HandRank));
+
+            Console.WriteLine();
+
+            Console.Write("Players\t");
+
+            for (Int32 w = 0; w < items.Length; w++)
+            {
+                Console.Write("{0}\t", items.GetValue(w));
+            }
+
+            Console.WriteLine();
+
+            return items;
+        }
+
+        static void Main(string[] args)
+        {
+            //SimWrapper(100);
+            SimWrapper(1000000);
         }
     }
 }
