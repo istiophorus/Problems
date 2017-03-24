@@ -96,9 +96,11 @@ namespace PEngine
 
             StringBuilder sb = new StringBuilder();
 
-            for (Int32 q = 2; q < 9; q++)
+            for (Int32 q = 2; q < 10; q++)
             {
                 Dictionary<CardsAnalyser.HandRank, Int32> winnersCounters = allResults[q];
+
+                sb.Append(q).Append("\t");
 
                 for (Int32 w = 0; w < items.Length; w++)
                 {
