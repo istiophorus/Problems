@@ -102,7 +102,7 @@ namespace PEngine
             return new Card(SymbolsIndexed[symbolIndex], SuitsIndexed[suitIndex]);
         }
 
-        public static Result GetWinner(Result[] results)
+        public static Tuple<Result, Int32> GetWinner(Result[] results)
         {
             if (results.Length == 0)
             {
@@ -111,8 +111,10 @@ namespace PEngine
 
             if (results.Length == 1)
             {
-                return results[0];
+                return new Tuple<Result, Int32>(results[0], 0);
             }
+
+            Int32 index = 0;
 
             Result result = results[0];
 
@@ -125,10 +127,12 @@ namespace PEngine
                 if (compareResult > 0)
                 {
                     result = current;
+
+                    index = q;
                 }
             }
 
-            return result;
+            return new Tuple<Result, Int32>(result, index);
         }
 
         public static Result AnalyseCards(Card[] cards)
@@ -265,24 +269,24 @@ namespace PEngine
             Tuple<HandRank, List<Card>> selectedHandCardsAndRand = PrepareSelectedCardsAndRand(currentHand, cardsMap, flushCards, longestCardsSequence, fours, highestThree, highestFour, highestTwo, pairsList, threesList, selectedLongestSuitedSequence);
 
             return new Result
-                {
-                    Rank = selectedHandCardsAndRand.Item1,
-                    MainHandCards = selectedHandCardsAndRand.Item2.ToArray(),
-                    ResidualCards = PrepareResidualCards(cards, selectedHandCardsAndRand.Item2)
-                };
+            {
+                Rank = selectedHandCardsAndRand.Item1,
+                MainHandCards = selectedHandCardsAndRand.Item2.ToArray(),
+                ResidualCards = PrepareResidualCards(cards, selectedHandCardsAndRand.Item2)
+            };
         }
 
         private static Tuple<HandRank, List<Card>> PrepareSelectedCardsAndRand(
             HandRank currentHand,
-            CardsMap cardsMap, 
-            List<Card> flushCards, 
-            List<int> longestCardsSequence, 
-            int fours, 
-            int highestThree, 
-            int highestFour, 
-            int highestTwo, 
-            List<Int32> pairsList, 
-            List<Int32> threesList, 
+            CardsMap cardsMap,
+            List<Card> flushCards,
+            List<int> longestCardsSequence,
+            int fours,
+            int highestThree,
+            int highestFour,
+            int highestTwo,
+            List<Int32> pairsList,
+            List<Int32> threesList,
             List<Card> selectedLongestSuitedSequence)
         {
             if (flushCards != null && flushCards.Count >= HandCardsCount)
