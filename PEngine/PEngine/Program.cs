@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PEngine
@@ -169,28 +170,41 @@ namespace PEngine
         {
             //Dictionary<Int32, Dictionary<CardsAnalyser.HandRank, Int32>> allResults = new Dictionary<Int32, Dictionary<CardsAnalyser.HandRank, Int32>>();
 
-            //for (Int32 q = 2; q < 10; q++)
+            for (Int32 q = 2; q < 10; q++)
             {
-                Int32 q = 2;
-
                 Console.WriteLine(q);
 
-                Dictionary<String, Int32> winnersCounters = WinnerPocketCardsStats(q, maxGames);
+                Dictionary<String, Int32> cardsStats = WinnerPocketCardsStats(q, maxGames);
 
-              //  allResults.Add(q, winnersCounters);
+                //allResults.Add(q, winnersCounters);
+                PrintCardsStats(cardsStats, q);
             }
 
             //rintResults(allResults);
         }
 
+        private static void PrintCardsStats(Dictionary<String, Int32> cardsStats, Int32 players)
+        {
+            var s = cardsStats.Select(x => new
+            {
+                Pair = x.Key,
+                Count = x.Value
+            }).OrderByDescending(y => y.Count);
+
+            foreach (var item in s)
+            {
+                Console.WriteLine("{0};{1};{2}", players, item.Pair, item.Count);
+            }
+        }
+
         static void Main(string[] args)
         {
-            Sim2Wrapper(100000);
+            Sim2Wrapper(1000000);
 
             //SimWrapper(100);
             WinnersStats.WinnersStatsSimWrapper(1000000);
 
-            Sim2Wrapper(1000000);
+            //Sim2Wrapper(1000000);
         }
     }
 }
