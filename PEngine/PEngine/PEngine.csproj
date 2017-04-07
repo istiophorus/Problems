@@ -54,6 +54,7 @@
     <Compile Include="MersenneTwister.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimResults.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="WinnersStats.cs" />
   </ItemGroup>

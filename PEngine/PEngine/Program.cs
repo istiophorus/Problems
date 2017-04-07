@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace PEngine
 {
@@ -116,15 +115,95 @@ namespace PEngine
             return result;
         }
 
-        private static Dictionary<String, Int32> WinnerPocketCardsStats(Int32 players, Int32 maxGames)
+        //private static Dictionary<String, Int32> WinnerPocketCardsStats(Int32 players, Int32 maxGames)
+        //{
+        //    List<Card[]> playerCards = new List<Card[]>(players);
+
+        //    IRandom random = new MersenneTwister((UInt64)Environment.TickCount);
+
+        //    CardsAnalyser.Result[] singleMatchResults = new CardsAnalyser.Result[players];
+
+        //    Dictionary<String, Int32> winnersCounters = new Dictionary<String, Int32>();
+
+        //    for (Int32 g = 0; g < maxGames; g++)
+        //    {
+        //        DeckOfCards deckOfCards = new DeckOfCards();
+
+        //        deckOfCards.Shuffle(random, 2000);
+
+        //        playerCards.Clear();
+
+        //        for (Int32 q = 0; q < players; q++)
+        //        {
+        //            Card[] cards = deckOfCards.Draw(2);
+
+        //            playerCards.Add(cards);
+        //        }
+
+        //        Card[] cards2 = deckOfCards.Draw(5);
+
+        //        for (Int32 q = 0; q < players; q++)
+        //        {
+        //            List<Card> cc = new List<Card>(cards2);
+
+        //            cc.AddRange(playerCards[q]);
+
+        //            CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(cc.ToArray());
+
+        //            singleMatchResults[q] = result;
+        //        }
+
+        //        Tuple<CardsAnalyser.Result, Int32> winner = CardsAnalyser.GetWinner(singleMatchResults);
+
+        //        Card[] initialCards = playerCards[winner.Item2];
+
+        //        String state = GetCardsState(initialCards[0], initialCards[1]);
+
+        //        winnersCounters.TryUpdateCounterOrAdd(state);
+        //    }
+
+        //    return winnersCounters;
+        //}
+
+        private static void PrintCardsStats(Dictionary<String, Int32> cardsStats, Int32 players)
         {
+            var s = cardsStats.Select(x => new
+            {
+                Pair = x.Key,
+                Count = x.Value
+            }).OrderByDescending(y => y.Count);
+
+            foreach (var item in s)
+            {
+                Console.WriteLine("{0};{1};{2}", players, item.Pair, item.Count);
+            }
+        }
+
+        private static SimResults GameSimulation(Int32 players, Int32 maxGames)
+        {
+            Dictionary<CardsAnalyser.HandRank, Int32> counters = new Dictionary<CardsAnalyser.HandRank, Int32>();
+
+            Dictionary<CardsAnalyser.HandRank, Int32> winnersCounters = new Dictionary<CardsAnalyser.HandRank, Int32>();
+
+            Dictionary<String, Int32> pocketHandsWinnersCounters = new Dictionary<String, Int32>();
+
+            Dictionary<String, Int32> pocketHandsLoserCounters = new Dictionary<String, Int32>();
+
+            SimResults simResults = new SimResults
+            {
+                Games = maxGames,
+                Players = players,
+                HandsStats = counters,
+                WinningHandsStats = winnersCounters,
+                PocketCardsWinnersStats = pocketHandsWinnersCounters,
+                PocketCardsLoserStats = pocketHandsLoserCounters
+            };
+
             List<Card[]> playerCards = new List<Card[]>(players);
 
             IRandom random = new MersenneTwister((UInt64)Environment.TickCount);
 
             CardsAnalyser.Result[] singleMatchResults = new CardsAnalyser.Result[players];
-
-            Dictionary<String, Int32> winnersCounters = new Dictionary<String, Int32>();
 
             for (Int32 g = 0; g < maxGames; g++)
             {
@@ -151,60 +230,59 @@ namespace PEngine
 
                     CardsAnalyser.Result result = CardsAnalyser.AnalyseCards(cc.ToArray());
 
+                    counters.TryUpdateCounterOrAdd(result.Rank);
+
                     singleMatchResults[q] = result;
                 }
 
                 Tuple<CardsAnalyser.Result, Int32> winner = CardsAnalyser.GetWinner(singleMatchResults);
 
-                Card[] initialCards = playerCards[winner.Item2];
+                winnersCounters.TryUpdateCounterOrAdd(winner.Item1.Rank);
 
-                String state = GetCardsState(initialCards[0], initialCards[1]);
+                for (Int32 q = 0; q < players; q++)
+                {
+                    Card[] initialCards = playerCards[q];
 
-                winnersCounters.TryUpdateCounterOrAdd(state);
+                    String state = GetCardsState(initialCards[0], initialCards[1]);
+
+                    Dictionary<String, Int32> targetMap;
+
+                    if (q == winner.Item2)
+                    {
+                        targetMap = pocketHandsWinnersCounters;
+                    }
+                    else
+                    {
+                        targetMap = pocketHandsLoserCounters;
+                    }
+
+                    targetMap.TryUpdateCounterOrAdd(state);
+                }
             }
 
-            return winnersCounters;
+            return simResults;
         }
 
-        private static void Sim2Wrapper(Int32 maxGames)
+        internal static void SimWrapper(Int32 maxGames)
         {
-            //Dictionary<Int32, Dictionary<CardsAnalyser.HandRank, Int32>> allResults = new Dictionary<Int32, Dictionary<CardsAnalyser.HandRank, Int32>>();
+            Dictionary<Int32, SimResults> allResults = new Dictionary<Int32, SimResults>();
 
             for (Int32 q = 2; q < 10; q++)
             {
                 Console.WriteLine(q);
 
-                Dictionary<String, Int32> cardsStats = WinnerPocketCardsStats(q, maxGames);
+                SimResults simResults = GameSimulation(q, maxGames);
 
-                //allResults.Add(q, winnersCounters);
-                PrintCardsStats(cardsStats, q);
+                allResults.Add(q, simResults);
             }
 
-            //rintResults(allResults);
+            //PrintResults(allResults);
         }
 
-        private static void PrintCardsStats(Dictionary<String, Int32> cardsStats, Int32 players)
+        public static void Main(string[] args)
         {
-            var s = cardsStats.Select(x => new
-            {
-                Pair = x.Key,
-                Count = x.Value
-            }).OrderByDescending(y => y.Count);
-
-            foreach (var item in s)
-            {
-                Console.WriteLine("{0};{1};{2}", players, item.Pair, item.Count);
-            }
-        }
-
-        static void Main(string[] args)
-        {
-            Sim2Wrapper(1000000);
-
-            //SimWrapper(100);
-            WinnersStats.WinnersStatsSimWrapper(1000000);
-
-            //Sim2Wrapper(1000000);
+            SimWrapper(1000000);
         }
     }
 }
+
