@@ -165,17 +165,27 @@ namespace PEngine
         //    return winnersCounters;
         //}
 
-        private static void PrintCardsStats(Dictionary<String, Int32> cardsStats, Int32 players)
+        private static void PrintCardsStats(Dictionary<String, Int32> winnersCardsStats, Dictionary<String, Int32> losersCardsStats, Int32 players)
         {
-            var s = cardsStats.Select(x => new
-            {
-                Pair = x.Key,
-                Count = x.Value
-            }).OrderByDescending(y => y.Count);
+            var s = winnersCardsStats.Select(x => new
+                {
+                    Pair = x.Key,
+                    Count = x.Value
+                }).OrderByDescending(y => y.Count);
 
-            foreach (var item in s)
+            foreach (var winningItem in s)
             {
-                Console.WriteLine("{0};{1};{2}", players, item.Pair, item.Count);
+                Int32 gamesLostCounter = losersCardsStats[winningItem.Pair];
+
+                Double winningRatio = winningItem.Count * 1.0 / gamesLostCounter;
+
+                Console.WriteLine("{0};{1};{2};{3};{4};{5}", 
+                    players, 
+                    winningItem.Pair, 
+                    winningItem.Count, 
+                    gamesLostCounter, 
+                    winningRatio, 
+                    1.0 / winningRatio);
             }
         }
 
@@ -276,12 +286,28 @@ namespace PEngine
                 allResults.Add(q, simResults);
             }
 
-            //PrintResults(allResults);
+            WinnersStats.PrintResults(allResults);
+
+            PrintAllCardsStats(allResults);
+        }
+
+        private static void PrintAllCardsStats(Dictionary<Int32, SimResults> allResults)
+        {
+            Console.WriteLine("# Winners pocket cards stats: ");
+
+            for (Int32 q = 2; q < 10; q++)
+            {
+                SimResults results = allResults[q];
+
+                Dictionary<String, Int32> cardsStats = results.PocketCardsWinnersStats;
+
+                PrintCardsStats(results.PocketCardsWinnersStats, results.PocketCardsLoserStats, results.Players);
+            }
         }
 
         public static void Main(string[] args)
         {
-            SimWrapper(1000000);
+            SimWrapper(2000000);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace PEngine
 {
     public static class WinnersStats
     {
-        public static void PrintResults(Dictionary<Int32, Dictionary<CardsAnalyser.HandRank, Int32>> allResults)
+        public static void PrintResults(Dictionary<Int32, SimResults> allResults)
         {
             Array items = PrintHeaders();
 
@@ -14,7 +14,7 @@ namespace PEngine
 
             for (Int32 q = 2; q < 10; q++)
             {
-                Dictionary<CardsAnalyser.HandRank, Int32> winnersCounters = allResults[q];
+                Dictionary<CardsAnalyser.HandRank, Int32> winnersCounters = allResults[q].WinningHandsStats;
 
                 sb.Append(q).Append(";");
 
