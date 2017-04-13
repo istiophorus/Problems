@@ -177,7 +177,7 @@ namespace PEngine
             {
                 Int32 gamesLostCounter = losersCardsStats[winningItem.Pair];
 
-                Double winningRatio = winningItem.Count * 1.0 / gamesLostCounter;
+                Double winningRatio = winningItem.Count * 1.0 / (gamesLostCounter + winningItem.Count);
 
                 Console.WriteLine("{0};{1};{2};{3};{4};{5}", 
                     players, 
@@ -185,7 +185,7 @@ namespace PEngine
                     winningItem.Count, 
                     gamesLostCounter, 
                     winningRatio, 
-                    1.0 / winningRatio);
+                    1.0 - winningRatio);
             }
         }
 
@@ -286,7 +286,9 @@ namespace PEngine
                 allResults.Add(q, simResults);
             }
 
-            WinnersStats.PrintResults(allResults);
+            WinnersStats.PrintResults(allResults, results => results.WinningHandsStats);
+
+            WinnersStats.PrintResults(allResults, results => results.HandsStats);
 
             PrintAllCardsStats(allResults);
         }
