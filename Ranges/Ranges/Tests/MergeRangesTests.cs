@@ -49,6 +49,107 @@ namespace Ranges.Tests
         }
 
         [TestMethod]
+        public void Test8()
+        {
+            Range<int>[] ranges = new Range<int>[]
+            {
+                new Range<int>(0, 1),
+                new Range<int>(-1, 0),
+                new Range<int>(Int32.MinValue, -1),
+                new Range<int>(1, Int32.MaxValue)
+            };
+
+            Range<int>[] result = RangesTools.MergeRanges(ranges);
+
+            Range<int>[] expected = new Range<int>[]
+            {
+                new Range<int>(Int32.MinValue, Int32.MaxValue)
+            };
+
+            CollectionAssert.AreEquivalent(expected, result);
+        }
+
+        [TestMethod]
+        public void Test7()
+        {
+            Range<int>[] ranges = new Range<int>[]
+            {
+                new Range<int>(0, 1),
+                new Range<int>(-1, 0),
+                new Range<int>(-2, -1),
+                new Range<int>(5, Int32.MaxValue)
+            };
+
+            Range<int>[] result = RangesTools.MergeRanges(ranges);
+
+            Range<int>[] expected = new Range<int>[]
+            {
+                new Range<int>(-2, 1),
+                new Range<int>(5, Int32.MaxValue)
+            };
+
+            CollectionAssert.AreEquivalent(expected, result);
+        }
+
+        [TestMethod]
+        public void Test6()
+        {
+            Range<int>[] ranges = new Range<int>[]
+            {
+                new Range<int>(0, 0),
+                new Range<int>(-1, 1),
+                new Range<int>(-2, 2),
+            };
+
+            Range<int>[] result = RangesTools.MergeRanges(ranges);
+
+            Range<int>[] expected = new Range<int>[]
+            {
+                new Range<int>(-2, 2)
+            };
+
+            CollectionAssert.AreEquivalent(expected, result);
+        }
+
+        [TestMethod]
+        public void Test5()
+        {
+            Range<int>[] ranges = new Range<int>[]
+            {
+                new Range<int>(0, 0),
+                new Range<int>(0, 0),
+                new Range<int>(0, 0),
+            };
+
+            Range<int>[] result = RangesTools.MergeRanges(ranges);
+
+            Range<int>[] expected = new Range<int>[]
+            {
+                new Range<int>(0, 0)
+            };
+
+            CollectionAssert.AreEquivalent(expected, result);
+        }
+
+        [TestMethod]
+        public void Test4()
+        {
+            Range<int>[] ranges = new Range<int>[]
+            {
+                new Range<int>(15, 18)
+            };
+
+            Range<int>[] result = RangesTools.MergeRanges(ranges);
+
+            Range<int>[] expected = new Range<int>[]
+            {
+                new Range<int>(15, 18)
+            };
+
+            CollectionAssert.AreEquivalent(expected, result);
+        }
+
+        [TestMethod]
         public void Test3()
         {
             Range<int>[] ranges = new Range<int>[]
@@ -72,4 +173,5 @@ namespace Ranges.Tests
         }
     }
 }
+
 
