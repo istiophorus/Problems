@@ -44,12 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ListItem.cs" />
+    <Compile Include="Tests\CanMergeTests.cs" />
+    <Compile Include="Tests\ListitemTests.cs" />
+    <Compile Include="ListItemTools.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RangesTools.cs" />
-    <Compile Include="RangesToolsBinarySearchTests.cs" />
-    <Compile Include="RangesToolsGetSeparableRangesTests.cs" />
+    <Compile Include="Tests\MergeRangesTests.cs" />
+    <Compile Include="Tests\MergeTwoRangesTests.cs" />
+    <Compile Include="Tests\RangesToolsBinarySearchTests.cs" />
+    <Compile Include="Tests\RangesToolsGetSeparableRangesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

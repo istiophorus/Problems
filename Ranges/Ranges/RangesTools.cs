@@ -98,5 +98,103 @@ namespace Ranges
 
             return result.ToArray();
         }
+
+        public static bool CanMerge<T>(Range<T> a, Range<T> b) where T : IComparable<T>
+        {
+            if (null == a)
+            {
+                throw new ArgumentNullException(nameof(a));
+            }
+
+            if (null == b)
+            {
+                throw new ArgumentNullException(nameof(b));
+            }
+
+            if (a.End.CompareTo(b.Begin) == -1)
+            {
+                return false;
+            }
+
+            if (b.End.CompareTo(a.Begin) == -1)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static Range<T> MergeRanges<T>(Range<T> a, Range<T> b) where T : IComparable<T>
+        {
+            if (null == a)
+            {
+                throw new ArgumentNullException(nameof(a));
+            }
+
+            if (null == b)
+            {
+                throw new ArgumentNullException(nameof(b));
+            }
+
+            T begin = a.Begin.CompareTo(b.Begin) <= 0 ? a.Begin : b.Begin;
+
+            T end = a.End.CompareTo(b.End) >= 0 ? a.End : b.End;
+
+            return new Range<T>(begin, end);
+        }
+
+        public static Range<T>[] MergeRanges<T>(IEnumerable<Range<T>> input) where T : IComparable<T>
+        {
+            if (null == input)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            Range<T>[] ranges = input.ToArray();
+
+            if (ranges.Length <= 1)
+            {
+                return ranges;
+            }
+
+            Array.Sort(ranges, (a, b) => a.Begin.CompareTo(b.Begin));
+
+            ListItem<Range<T>> rangesListItem = ranges.ToList();
+
+            List<Range<T>> results = new List<Range<T>>();
+
+            while (rangesListItem != null)
+            {
+                ListItem<Range<T>> current = rangesListItem;
+
+                ListItem<Range<T>> next = current.Next;
+
+                if (null != next)
+                {
+                    if (CanMerge(current.Data, next.Data))
+                    {
+                        Range<T> mergedRange = MergeRanges(current.Data, next.Data);
+
+                        next.Data = mergedRange;
+
+                        rangesListItem = next;
+                    }
+                    else
+                    {
+                        results.Add(current.Data);
+
+                        rangesListItem = next;
+                    }
+                }
+                else
+                {
+                    results.Add(current.Data);
+
+                    rangesListItem = next;
+                }
+            }
+
+            return results.ToArray();
+        }
     }
 }
