@@ -45,32 +45,32 @@ namespace Ranges
             return result.ToArray();
         }
 
-        public static int Main(string[] args)
-        {
-            try
-            {
-                List<int> input = new List<int>(args.Length);
+        //public static int Main(string[] args)
+        //{
+        //    try
+        //    {
+        //        List<int> input = new List<int>(args.Length);
 
-                Array.ForEach(args, x => input.Add(int.Parse(x)));
+        //        Array.ForEach(args, x => input.Add(int.Parse(x)));
 
-                Range<int>[] ranges = ConvertToRanges(input.ToArray());
+        //        Range<int>[] ranges = ConvertToRanges(input.ToArray());
 
-                Range<int>[] result = RangesTools.MergeRanges(ranges);
+        //        Range<int>[] result = RangesTools.MergeRanges(ranges);
 
-                int[] resultArray = AsArray(result);
+        //        int[] resultArray = AsArray(result);
 
-                Array.ForEach(resultArray, x => Console.Write($" {x} "));
+        //        Array.ForEach(resultArray, x => Console.Write($" {x} "));
 
-                Console.WriteLine();
+        //        Console.WriteLine();
 
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
+        //        return 0;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex);
 
-                return 1;
-            }
-        }
+        //        return 1;
+        //    }
+        //}
     }
 }

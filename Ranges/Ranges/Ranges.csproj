@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FullSolutionForCodepad.cs" />
+    <Compile Include="FullSolutionFOrCodepadPacked.cs" />
     <Compile Include="ListItem.cs" />
     <Compile Include="Tests\CanMergeTests.cs" />
     <Compile Include="Tests\ListitemTests.cs" />
